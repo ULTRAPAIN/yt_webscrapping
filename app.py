@@ -4,9 +4,22 @@ import requests
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen as uReq
 import logging
+from selenium.webdriver.common.by import By
+from selenium import webdriver
+import requests
+from urllib.request import urlopen as ureq
+import pandas as pd
+from pymongo.mongo_client import MongoClient
+
+
 logging.basicConfig(filename="scrapper.log" , level=logging.INFO)
 
 app = Flask(__name__)
+firefox_options = webdriver.FirefoxOptions()
+firefox_options.add_argument('--headless')
+firefox_options.add_argument('--no-sandbox')
+driver = webdriver.Firefox(options=firefox_options)
+
 
 @app.route("/", methods = ['GET'])
 def homepage():
@@ -16,63 +29,59 @@ def homepage():
 def index():
     if request.method == 'POST':
         try:
-            searchString = request.form['content'].replace(" ","")
-            flipkart_url = "https://www.flipkart.com/search?q=" + searchString
-            uClient = uReq(flipkart_url)
-            flipkartPage = uClient.read()
-            uClient.close()
-            flipkart_html = bs(flipkartPage, "html.parser")
-            bigboxes = flipkart_html.findAll("div", {"class": "_1AtVbE col-12-12"})
-            del bigboxes[0:3]
-            box = bigboxes[0]
-            productLink = "https://www.flipkart.com" + box.div.div.div.a['href']
-            prodRes = requests.get(productLink)
-            prodRes.encoding='utf-8'
-            prod_html = bs(prodRes.text, "html.parser")
-            print(prod_html)
-            commentboxes = prod_html.find_all('div', {'class': "_16PBlm"})
-
-            filename = searchString + ".csv"
+            yt_string = request.form['content'].replace(" ","")
+            yt_url = "https://www.youtube.com/@"+yt_string+"/videos"
+            driver.get(yt_url)
+            videos=driver.find_elements(By.XPATH, './/*[@id="dismissible"]')
+            filename =  yt_string + ".csv"
             fw = open(filename, "w")
-            headers = "Product, Customer Name, Rating, Heading, Comment \n"
+            headers = "Title, Views, Release_date, title_url, thumbnail_url \n"
             fw.write(headers)
-            reviews = []
-            for commentbox in commentboxes:
+            video_list=[]
+            for video in videos[:6]:
                 try:
-                    #name.encode(encoding='utf-8')
-                    name = commentbox.div.div.find_all('p', {'class': '_2sc7ZR _2V5EHH'})[0].text
+                    #title.encode(encoding='utf-8')
+                   title=video.find_element(By.XPATH,'.//*[@id="video-title"]').text
 
                 except:
-                    logging.info("name")
+                    logging.info("title")
 
                 try:
-                    #rating.encode(encoding='utf-8')
-                    rating = commentbox.div.div.div.div.text
+                    #views.encode(encoding='utf-8')
+                    views=video.find_element(By.XPATH,'.//*[@id="metadata-line"]/span[1]').text
 
 
                 except:
-                    rating = 'No Rating'
-                    logging.info("rating")
+                    views = 'No Views'
+                    logging.info("views")
 
                 try:
-                    #commentHead.encode(encoding='utf-8')
-                    commentHead = commentbox.div.div.div.p.text
-
+                    #video_title_link.encode(encoding='utf-8')
+                    video_title_link=video.find_element(By.XPATH,'.//*[@id="video-title-link"]')
+                    href_link = video_title_link.get_attribute('href')
+                    
                 except:
-                    commentHead = 'No Comment Heading'
-                    logging.info(commentHead)
+                    href_link = 'No links'
+                    logging.info("href_link")
                 try:
-                    comtag = commentbox.div.div.find_all('div', {'class': ''})
-                    #custComment.encode(encoding='utf-8')
-                    custComment = comtag[0].div.text
-                except Exception as e:
-                    logging.info(e)
+                    release_date=video.find_element(By.XPATH,'.//*[@id="metadata-line"]/span[2]').text
+                except :
+                    release_date="no date"
+                    logging.info("release_date")
+                try:
+                    thumbnail_url=video.find_element(By.XPATH,'.//*[@id="thumbnail"]')
+                    img_url=thumbnail_url.get_attribute('href')
+                except:
+                    thumbnail_url="no link"
+                    logging.info("thumbnail_url")
 
-                mydict = {"Product": searchString, "Name": name, "Rating": rating, "CommentHead": commentHead,
-                          "Comment": custComment}
-                reviews.append(mydict)
-            logging.info("log my final result {}".format(reviews))
-            return render_template('result.html', reviews=reviews[0:(len(reviews)-1)])
+                video_items={"title":title,"views":views,"when":release_date,"title_link":href_link,"img_link":img_url}
+                video_list.append(video_items)
+                df=pd.DataFrame(video_list)
+                print(df)
+           
+            logging.info("log my final result {}".format(video_list))
+            return render_template('result2.html', reviews=video_list[0:len(video_list)])
         except Exception as e:
             logging.info(e)
             return 'something is wrong'
@@ -83,4 +92,4 @@ def index():
 
 
 if __name__=="__main__":
-    app.run(host="0.0.0.0")
+    app.run(debug=True)

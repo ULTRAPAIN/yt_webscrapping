@@ -51,10 +51,10 @@ table th {
   font-weight: 300;
 }
 table tr:nth-child(2n) {
-  background-color: white;
+  background-color: rgb(5, 5, 5);
 }
 table tr:nth-child(2n+1) {
-  background-color: #edf7f8;
+  background-color: #080808;
 }
 
 @media screen and (max-width: 700px) {
@@ -84,16 +84,16 @@ table tr:nth-child(2n+1) {
     position: absolute;
   }
   td:nth-child(2):before {
-    content: 'Name:';
+    content: 'Title:';
   }
   td:nth-child(3):before {
-    content: 'Email:';
+    content: 'Views:';
   }
   td:nth-child(4):before {
-    content: 'Phone:';
+    content: 'DOR:';
   }
   td:nth-child(5):before {
-    content: 'Comments:';
+    content: 'Title-link:';
   }
 
   tr {

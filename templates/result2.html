@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Review Page</title>
+  <title>review Page</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
@@ -17,25 +17,23 @@
 <body>
 
   <div class="table-users">
-   <div class="header">Reviews</div>
+   <div class="header">reviews</div>
 
    <table cellspacing="0">
       <tr>
-         <th>Product</th>
-         <th>Name</th>
-         <th>Rating</th>
-         <th>Comment Heading</th>
-         <th>mycomment </th>
-         <th width="230">Comments</th>
+         <th>Title</th>
+         <th>Views</th>
+         <th>Release Date</th>
+         <th>Title Link</th>
+         <th>Thumbnail Link</th>
       </tr>
          {% for review in reviews %}
       <tr>
-          <td>{{review['Product']}}</td>
-         <td>{{review['Name']}}</td>
-         <td>{{review['Rating']}}</td>
-         <td>{{review['CommentHead']}}</td>
-         <td>{{review['Comment']}} </td>
-         <td>{{review['Comment']}} </td>
+          <td>{{review['title']}}</td>
+         <td>{{review['views']}}</td>
+         <td>{{review['when']}}</td>
+         <td>{{review['title_link']}}</td>
+         <td>{{review['img_link']}} </td>
        {% endfor %}
    </table>
 </div>
