@@ -22,10 +22,12 @@ driver = webdriver.Firefox(options=firefox_options)
 
 
 @app.route("/", methods = ['GET'])
+@cross_origin
 def homepage():
     return render_template("index.html")
 
 @app.route("/review" , methods = ['POST' , 'GET'])
+@cross_origin
 def index():
     if request.method == 'POST':
         try:
