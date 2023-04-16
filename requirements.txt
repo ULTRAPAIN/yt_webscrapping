@@ -16,3 +16,4 @@ soupsieve
 urllib3
 Werkzeug
 pymongo
+pandas
