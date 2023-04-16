@@ -10,6 +10,7 @@ import requests
 from urllib.request import urlopen as ureq
 import pandas as pd
 from pymongo.mongo_client import MongoClient
+import csv
 
 
 logging.basicConfig(filename="scrapper.log" , level=logging.INFO)
@@ -36,9 +37,9 @@ def index():
             driver.get(yt_url)
             videos=driver.find_elements(By.XPATH, './/*[@id="dismissible"]')
             filename =  yt_string + ".csv"
-            fw = open(filename, "w")
-            headers = "Title, Views, Release_date, title_url, thumbnail_url \n"
-            fw.write(headers)
+            with open(filename, mode='w', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(['Title', 'Views', 'Release_date', 'title_url', 'thumbnail_url'])
             video_list=[]
             for video in videos[:6]:
                 try:
@@ -77,7 +78,10 @@ def index():
                     thumbnail_url="no link"
                     logging.info("thumbnail_url")
 
+                
                 video_items={"title":title,"views":views,"when":release_date,"title_link":href_link,"img_link":img_url}
+                video_items=[title, views, release_date, href_link, img_url]
+                writer.writerow(video_items)
                 video_list.append(video_items)
                 df=pd.DataFrame(video_list)
                 print(df)
