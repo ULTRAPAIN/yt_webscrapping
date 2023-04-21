@@ -20,11 +20,11 @@ firefox_options.add_argument('--no-sandbox')
 driver = webdriver.Firefox(options=firefox_options)
 
 
-@app.route("/", methods = ['GET'])
+@application.route("/", methods = ['GET'])
 def homepage():
     return render_template("index.html")
 
-@app.route("/review" , methods = ['POST' , 'GET'])
+@application.route("/review" , methods = ['POST' , 'GET'])
 def index():
     if request.method == 'POST':
         try:
