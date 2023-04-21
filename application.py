@@ -13,8 +13,7 @@ from pymongo.mongo_client import MongoClient
 
 
 logging.basicConfig(filename="scrapper.log" , level=logging.INFO)
-
-app = Flask(__name__)
+application = Flask(__name__)
 firefox_options = webdriver.FirefoxOptions()
 firefox_options.add_argument('--headless')
 firefox_options.add_argument('--no-sandbox')
@@ -93,4 +92,4 @@ def index():
 
 
 if __name__=="__main__":
-    app.run(debug=True)
+    application.run(debug=True)
