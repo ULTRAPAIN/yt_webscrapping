@@ -77,9 +77,9 @@ def index():
 
                 video_items={"title":title,"views":views,"when":release_date,"title_link":href_link,"img_link":img_url}
                 video_list.append(video_items)
-                # df=pd.DataFrame(video_list)
-                # print(df)
-                # df.to_csv("yotube_data.csv")
+                df=pd.DataFrame(video_list)
+                print(df)
+                df.to_csv("yotube_data.csv")
            
             logging.info("log my final result {}".format(video_list))
             return render_template('result2.html', reviews=video_list[0:len(video_list)])
