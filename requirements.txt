@@ -9,7 +9,6 @@ docutils==0.19
 Flask==2.2.0
 Flask_Cors==3.0.10
 HTMLParser==0.0.2
-ipython==8.11.0
 ipywidgets==8.0.6
 Jinja2==3.1.2
 jnius==1.1.0
