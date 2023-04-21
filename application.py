@@ -10,6 +10,7 @@ import requests
 from urllib.request import urlopen as ureq
 import pandas as pd
 from pymongo.mongo_client import MongoClient
+import cython
 
 
 logging.basicConfig(filename="scrapper.log" , level=logging.INFO)
