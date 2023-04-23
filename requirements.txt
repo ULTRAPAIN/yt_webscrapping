@@ -36,3 +36,4 @@ Werkzeug==2.2.3
 wsproto==1.2.0
 gunicorn
 pymongo
+cython
